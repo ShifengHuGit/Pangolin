@@ -21,8 +21,10 @@
 #include <pthread.h>
 
 //unsigned char mac[6]="\x08\x00\x27\x03\x75\x3E";
-unsigned char mac[6]="\x08\x00\x27\x53\x10\xFA";
-unsigned char src_mac[6]="\x74\xe6\xe2\x00\x39\x0c";
+//02:00:17:00:7a:38
+unsigned char src_mac[6]="\x02\x00\x17\x00\x7a\x38";
+//00:00:17:32:c6:ff
+unsigned char mac[6]="\x00\x00\x17\x32\xc6\xff";
 int sock_r;
 
 void *runner(void *vargp)//function for sending packet to destination mac
@@ -41,14 +43,14 @@ void *runner(void *vargp)//function for sending packet to destination mac
 
   struct ifreq ifreq_c;
   memset(&ifreq_c,0,sizeof(ifreq_c));
-  strncpy(ifreq_c.ifr_name,"enp7s0",IFNAMSIZ-1);//giving name of Interface
+  strncpy(ifreq_c.ifr_name,"ens3",IFNAMSIZ-1);//giving name of Interface
  
   if((ioctl(sock_raw,SIOCGIFHWADDR,&ifreq_c))<0) //getting MAC Address
     printf("error in SIOCGIFHWADDR ioctl reading");
 
   struct ifreq ifreq_ip;
   memset(&ifreq_ip,0,sizeof(ifreq_ip));
-  strncpy(ifreq_ip.ifr_name,"enp7s0",IFNAMSIZ-1);//giving name of Interface
+  strncpy(ifreq_ip.ifr_name,"ens3",IFNAMSIZ-1);//giving name of Interface
   if(ioctl(sock_raw,SIOCGIFADDR,&ifreq_ip)<0) //getting IP Address
     printf("error in SIOCGIFADDR \n");
 
@@ -111,7 +113,7 @@ int main()
 {
   pthread_t t1;
   int x=0;
-  sock_r=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_ALL));//socket for receiving all ethernet packets
+  sock_r=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_IP));//socket for receiving all ethernet packets
   if(sock_r<0)
   {
    perror("error in socket\n");
